@@ -1,62 +1,58 @@
-// === State ===
-// Here, we define variables for the data that our program needs to remember.
-// We call this data "state" because it represents the state of our program.
-// This is also where we define functions to modify the state.
+const jobs = [
+  { name: 'Alice', occupation: 'Writer', startingPrice: 30 },
+  { name: 'Bob', occupation: 'Teacher', startingPrice: 50 },
+   
 
-// TODO: Add support for more colors
-const colors = ["red", "green", "blue"];
-const sizes = ["small", "medium", "large"];
-const maxShapes = 10;
-const shapes = [
-  {
-    color: "red",
-    size: "small",
-  },
-  {
-    color: "yellow",
-    size: "small",
-  },
 ];
 
-/** Adds a shape with random properties to the `shapes` array */
-function addShape() {
-  const color = colors[Math.floor(Math.random() * colors.length)];
+const names = ['Alice', 'Bob', 'Carol', 'Greg', 'Ben'];
+const occupations = ['Writer', 'Teacher', 'Programmer', 'Sales', 'Engineer'];
+const startingPrices = [30, 50, 70, 80, 60];
 
-  // TODO: Randomize the size of the shape
-  const size = "small";
-
-  shapes.push({ color, size });
+const calculateAveragePrice = () => {
+  const total = jobs.reduce((sum, job) => sum + job.startingPrice, 0);
+  return (total / jobs.length).toFixed(2);
 }
 
-// === Render ===
-// To "render" is to update the DOM to reflect the current state.
-// In this section, we define the functions to render state.
+function renderJobs() {
+  const jobList = document.getElementById('job-list');
+  //jobs.innerHTML = '';
 
-/** Updates the DOM to reflect the current state. */
-function render() {
-  // Render the squares
-  const squareList = document.querySelector("#squares");
-  const squareElements = shapes.map((shape) => {
-    const squareElement = document.createElement("li");
-    squareElement.classList.add(shape.color, shape.size);
-    return squareElement;
-  });
-  squareList.replaceChildren(...squareElements);
+  jobs.forEach(job => {
+    const listItem = document.createElement('li');
+    listItem.textContent = `${job.name} - ${job.occupation} - $${job.startingPrice}`;
+    jobList.appendChild(listItem);
+});
 
-  // TODO: Render the circles
+document.getElementById(`average-price`).textContent=`Average Starting Price: $${calculateAveragePrice()}`;
 }
 
-// === Script ===
-// In this section, we call the functions that we've defined above.
+function generateRandomJob() {
+  const randomName = names[Math.floor(Math.random() * names.length)];
+  const randomOccupation = occupations[Math.floor(Math.random() * occupations.length)];
+  const randomPrice = startingPrices[Math.floor(Math.random() * startingPrices.length)];
 
-// `setInterval` will call the callback function every 1000 milliseconds (1 second)
-// and return an interval ID that we can use to stop the interval later.
-// Calling `clearInterval(addShapeIntervalId)` will stop the interval.
-const addShapeIntervalId = setInterval(() => {
-  addShape();
-  render();
+  return { name: randomName, occupation: randomOccupation, startingPrice: randomPrice };
+}
 
-  // TODO: Stop adding shapes if we've reached the maximum number of shapes
-}, 1000);
+renderJobs();
+let count = 0;
+if (count === 0 ) {
+  setTimeout(() => {
+    jobs.pop();
+    jobs.pop();
+    jobs.push({ name:"Carol", occupation:"programmer", startingPrice: 70});
+    renderJobs();
+    count += 1;
+    return count;
 
-render(); // We call this function once to render the initial state
+  }, 1000);
+}
+  setInterval(() => {
+    const newJob = generateRandomJob();
+    jobs.push(newJob);
+    renderJobs();
+  }, 2000);
+
+
+
